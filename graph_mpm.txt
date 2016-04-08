@@ -11,14 +11,12 @@
 5 7
 6 7
 7 8
-
-#num	#durée 	#nom
-0 	0	Alpha
-1 	6	A
-2 	3	B
-3 	6	C
-4 	2	D
-5 	4	E
-6 	3	F
-7 	1	G
-8 	0	Omega
+0 0 Alpha
+1 6 A
+2 3 B
+3 6 C
+4 2 D
+5 4 E
+6 3 F
+7 1 G
+8 0 Omega

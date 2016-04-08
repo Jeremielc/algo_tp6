@@ -4,7 +4,7 @@
 #include "headers/header.h"
 
 int main(int argc, char** argv) {
-    LADJ graph;
+    GRAPH_L_ADJ graph;
 
     if (argc != 2) {
         printf("%s\n", "Veuillez specifier un fichier de graphe.");
@@ -23,9 +23,6 @@ int main(int argc, char** argv) {
     ////////////////////////////////////////////////////////////////////////////
     
     //fournir date au plus tot//////////////////////////////////////////////////
-    for (int i = 1; i < graph.nbSom; i++) {
-        graph.nodeTab[i]->earlyDate = graph.tab[i]->value; // + earlyDate(Node precedent)
-    }
     ////////////////////////////////////////////////////////////////////////////
     
     //date au plus tard/////////////////////////////////////////////////////////
@@ -39,7 +36,7 @@ int main(int argc, char** argv) {
     QUEUE_INT criticalTasks = newEmptyQueue_int();
     
     for (int i = 0; i < topologicalQueue.size; i++) {
-        NODE* node = graph.nodeTab[getHeadValue_int(criticalTemp)];
+        TASK* node = graph.nodeTab[getHeadValue_int(criticalTemp)];
         criticalTasks = checkAndAddCriticalTask(node, criticalTasks);
         
         criticalTemp = get_int(criticalTemp);
@@ -53,16 +50,17 @@ int main(int argc, char** argv) {
         criticalTasks = get_int(criticalTasks);
     }
     ////////////////////////////////////////////////////////////////////////////
-    //date de fin de travaux
+    
+    //date de fin de travaux////////////////////////////////////////////////////
+    ////////////////////////////////////////////////////////////////////////////
     
     free(graph.predNumber);
-    free(graph.succNumber);
     free(graph.nodeTab);
 
     return 0;
 }
 
-QUEUE_INT topologicalMarking(LADJ* graph) {
+QUEUE_INT topologicalMarking(GRAPH_L_ADJ* graph) {
     if (graph == NULL) {
         QUEUE_INT emptyQueue = newEmptyQueue_int();
         return emptyQueue;
@@ -117,8 +115,8 @@ QUEUE_INT topologicalMarking(LADJ* graph) {
     return topologicalQueue;
 }
 
-LADJ load_graph(char* fileName) {
-    LADJ graph;
+GRAPH_L_ADJ load_graph(char* fileName) {
+    GRAPH_L_ADJ graph_pred, graph_succ;
     int nbsom, nbar, ori, ext, val;
     FILE* canal;
     CELL* cell;
@@ -128,28 +126,28 @@ LADJ load_graph(char* fileName) {
     if (canal == NULL) {
         exit(-1);
     }
-
+    
     fscanf(canal, "%d %d", &nbsom, &nbar);
-    graph = init_ladj(nbsom, nbar);
-
+    graph_succ = init_ladj(nbsom, nbar);
+    
     for (int i = 0; i < nbar; i++) {
         fscanf(canal, "%d %d", &ori, &ext);
-        cell = creer_cellule(ext, 0, graph.tab[ori]);
-        graph.tab[ori] = cell; /* on empile */
+        cell = creer_cellule(ext, 0, graph_pred.tab[ori]);
+        graph_pred.tab[ori] = cell; /* on empile */
         
         //utiliser le tableau de predecesseur
 
-        graph.predNumber[ext] += 1;
+        graph_pred.predNumber[ext] += 1;
     }
 
     fclose(canal);
-
-    return graph;
+    
+    return graph_pred;
 }
 
-QUEUE_INT checkAndAddCriticalTask(NODE* node, QUEUE_INT criticalTasks) {
+QUEUE_INT checkAndAddCriticalTask(TASK* node, QUEUE_INT criticalTasks) {
     if (node->earlyDate == node->lateDate) {
-        criticalTasks = add_int(node->name, criticalTasks);
+        criticalTasks = add_int(node->id, criticalTasks);
     }
     
     return criticalTasks;

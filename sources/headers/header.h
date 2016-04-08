@@ -16,9 +16,24 @@
 
 typedef int ELEMENT;
 
+typedef struct GRAPH_M_ADJ {
+    int nbSummit;
+    int nbArc;
+    float** matrix; /* matrice d'adjacence */
+    char* nodeStatus;
+    REALATED_COMPONENTS componentInfo;
+} GRAPH_M_ADJ;
+
+typedef struct GRAPH_L_ADJ /* listes d'adjacence */ {
+    int nbSom;
+    int nbArc;
+    CELL** tab;
+    int* predNumber;
+    TASK** nodeTab;
+} GRAPH_L_ADJ;
+
 typedef struct CELL {
     int extremity;
-    int value;
     struct CELL* next;
 } CELL;
 
@@ -27,20 +42,13 @@ typedef struct CELL_INT {
     struct CELL_INT* next;
 } CELL_INT;
 
-typedef struct NODE {
-    int name;
-    int earlyDate;
-    int lateDate;
-}NODE;
-
-typedef struct LADJ /* listes d'adjacence */ {
-    int nbSom;
-    int nbArc;
-    CELL** tab;
-    int* predNumber;
-    int* succNumber;
-    NODE** nodeTab;
-} LADJ;
+typedef struct TASK {
+    char** name;    //Nom de la tache
+    int id;         //Numero du noeud
+    int duration;   //Durée de la tache    
+    int earlyDate;  //Date au plus tot
+    int lateDate;   //Date au plus tard
+}TASK;
 
 typedef struct QUEUE {
     int size;
@@ -59,14 +67,6 @@ typedef struct REALATED_COMPONENTS {
     int nbComponents;
 } REALATED_COMPONENTS;
 
-typedef struct GRAPH {
-    int nbSummit;
-    int nbArc;
-    float** matrix; /* matrice d'adjacence */
-    char* nodeStatus;
-    REALATED_COMPONENTS componentInfo;
-} GRAPH;
-
 typedef struct t_ens {
     int* parent;
     int nbElem;
@@ -74,17 +74,17 @@ typedef struct t_ens {
 } t_ens;
 
 //L_ADJ.c
-void    affiche_graphe(LADJ);
-void    affiche_liste(CELL*);
-LADJ    charge_graphe(char*);
-CELL*   creer_cellule(int, int, CELL*);
-LADJ    init_ladj(int, int);
-LADJ    inverse(LADJ);
+void        affiche_graphe(GRAPH_L_ADJ);
+void        affiche_liste(CELL*);
+GRAPH_L_ADJ charge_graphe(char*);
+CELL*       creer_cellule(int, int, CELL*);
+GRAPH_L_ADJ init_ladj(int, int);
+GRAPH_L_ADJ inverse(GRAPH_L_ADJ);
 
 //main.c
-QUEUE_INT topologicalMarking(LADJ*);
-LADJ load_graph(char*);
-QUEUE_INT checkAndAddCriticalTask(NODE*, QUEUE_INT);
+QUEUE_INT   topologicalMarking(GRAPH_L_ADJ*);
+GRAPH_L_ADJ load_graph(char*);
+QUEUE_INT   checkAndAddCriticalTask(TASK*, QUEUE_INT);
 
 //queue.c
 QUEUE   add(ELEMENT, QUEUE);

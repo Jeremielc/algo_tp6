@@ -27,8 +27,8 @@ void affiche_liste(CELL* p) {
     printf("\n");
 }
 
-LADJ init_ladj(int nsom, int nar) /* allocation dynamique et initialisation */ {
-    LADJ graph;
+GRAPH_L_ADJ init_ladj(int nsom, int nar) /* allocation dynamique et initialisation */ {
+    GRAPH_L_ADJ graph;
 
     graph.nbSom = nsom;
     graph.nbArc = nar;
@@ -47,11 +47,11 @@ LADJ init_ladj(int nsom, int nar) /* allocation dynamique et initialisation */ {
     }
     
     //Initialisation du tableau du nombre de noeuds.
-    graph.nodeTab = (NODE**) malloc(nsom * sizeof(NODE*));
-    NODE* nodeTemp = NULL;
+    graph.nodeTab = (TASK**) malloc(nsom * sizeof(TASK*));
+    TASK* nodeTemp = NULL;
     
     for (int i = 0; i < graph.nbSom; i++) {
-        nodeTemp = (NODE*) malloc (sizeof(NODE));
+        nodeTemp = (TASK*) malloc (sizeof(TASK));
         nodeTemp->name = i;
         nodeTemp->earlyDate = 0;
         nodeTemp->lateDate = 0;
@@ -66,7 +66,7 @@ LADJ init_ladj(int nsom, int nar) /* allocation dynamique et initialisation */ {
     return graph;
 }
 
-void affiche_graphe(LADJ graph) {
+void affiche_graphe(GRAPH_L_ADJ graph) {
     int i;
 
     for (i = 0; i < graph.nbSom; i++) {
@@ -78,8 +78,8 @@ void affiche_graphe(LADJ graph) {
     printf("\n");
 }
 
-LADJ charge_graphe(char* nom_fichier) {
-    LADJ graph;
+GRAPH_L_ADJ charge_graphe(char* nom_fichier) {
+    GRAPH_L_ADJ graph;
     int nsom, nar, i, ori, ext, val;
     FILE* fp;
     CELL* p;
@@ -105,8 +105,8 @@ LADJ charge_graphe(char* nom_fichier) {
     return graph;
 }
 
-LADJ inverse(LADJ graph) {
-    LADJ graph_inverse;
+GRAPH_L_ADJ inverse(GRAPH_L_ADJ graph) {
+    GRAPH_L_ADJ graph_inverse;
     int i;
     CELL* p, *q;
 
