@@ -28,7 +28,7 @@ typedef struct CELL_INT {
 } CELL_INT;
 
 typedef struct TASK {
-    char** name;    //Nom de la tache
+    char* name;    //Nom de la tache
     int id;         //Numero du noeud
     int duration;   //Durée de la tache    
     int earlyDate;  //Date au plus tot

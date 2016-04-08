@@ -23,6 +23,11 @@ int main(int argc, char** argv) {
     ////////////////////////////////////////////////////////////////////////////
 
     //fournir date au plus tot//////////////////////////////////////////////////
+    for (int i = 1; i < graph.nbSom; i++) {
+        
+        int temp = graph.nodeTab[i]->earlyDate;
+        temp += graph.nodeTab[graph.predTab[i]->extremity]->duration;
+    }
     ////////////////////////////////////////////////////////////////////////////
 
     //date au plus tard/////////////////////////////////////////////////////////
@@ -143,7 +148,23 @@ GRAPH_L_ADJ load_graph(char* fileName) {
 
         graph.predNumber[ext] += 1; //Pour le marquage topologique.
     }
-
+    
+    char* alias = NULL;
+    int id, duration;
+    
+    for (int i = 0; i < graph.nbSom; i++) {
+        if (alias != NULL) {
+            free(alias);
+        }
+        
+        alias = (char*) malloc(30 * sizeof (char));
+        fscanf(canal, "%d %d %s", &id, &duration, alias);
+        
+        graph.nodeTab[i]->id = id;
+        graph.nodeTab[i]->duration = duration;
+        graph.nodeTab[i]->name = alias;
+    }
+    
     fclose(canal);
 
     return graph;
