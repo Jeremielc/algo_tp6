@@ -133,7 +133,7 @@ GRAPH_L_ADJ load_graph(char* fileName) {
     for (int i = 0; i < nbar; i++) {
         fscanf(canal, "%d %d", &ori, &ext);
         cell = creer_cellule(ext, 0, graph_pred.tab[ori]);
-        graph_pred.tab[ori] = cell; /* on empile */
+        graph_pred.tab[ori] = cell; //on empile
         
         //utiliser le tableau de predecesseur
 

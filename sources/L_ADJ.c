@@ -40,12 +40,6 @@ GRAPH_L_ADJ init_ladj(int nsom, int nar) /* allocation dynamique et initialisati
         graph.predNumber[i] = 0;
     }
     
-    //Initialisation du tableau du nombre de successeurs.
-    graph.succNumber = (int*) malloc(graph.nbSom * sizeof (int));
-    for (int i = 0; i < graph.nbSom; i++) {
-        graph.succNumber[i] = 0;
-    }
-    
     //Initialisation du tableau du nombre de noeuds.
     graph.nodeTab = (TASK**) malloc(nsom * sizeof(TASK*));
     TASK* nodeTemp = NULL;
@@ -124,30 +118,3 @@ GRAPH_L_ADJ inverse(GRAPH_L_ADJ graph) {
     
     return graph_inverse;
 }
-
-/*******************************************************************************
-Trace d'execution sur le fichier :
-6
-8
-0 1 3
-1 1 6
-1 3 2
-1 4 1
-3 0 2
-3 4 2
-4 3 7
-5 2 1
-
-Successeurs de 0 : <1-3>
-Successeurs de 1 : <4-1>        <3-2>   <1-6>
-Successeurs de 3 : <4-2>        <0-2>
-Successeurs de 4 : <3-7>
-Successeurs de 5 : <2-1>
-
-Successeurs de 0 : <3-2>
-Successeurs de 1 : <1-6>        <0-3>
-Successeurs de 2 : <5-1>
-Successeurs de 3 : <4-7>        <1-2>
-Successeurs de 4 : <3-2>        <1-1>
-	
- *******************************************************************************/
