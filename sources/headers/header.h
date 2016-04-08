@@ -34,6 +34,7 @@ typedef struct GRAPH_L_ADJ /* listes d'adjacence */ {
 
 typedef struct CELL {
     int extremity;
+    int value;
     struct CELL* next;
 } CELL;
 
