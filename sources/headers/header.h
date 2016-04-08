@@ -16,22 +16,6 @@
 
 typedef int ELEMENT;
 
-typedef struct GRAPH_M_ADJ {
-    int nbSummit;
-    int nbArc;
-    float** matrix; /* matrice d'adjacence */
-    char* nodeStatus;
-    REALATED_COMPONENTS componentInfo;
-} GRAPH_M_ADJ;
-
-typedef struct GRAPH_L_ADJ /* listes d'adjacence */ {
-    int nbSom;
-    int nbArc;
-    CELL** tab;
-    int* predNumber;
-    TASK** nodeTab;
-} GRAPH_L_ADJ;
-
 typedef struct CELL {
     int extremity;
     int value;
@@ -73,6 +57,23 @@ typedef struct t_ens {
     int nbElem;
     int nbClass;
 } t_ens;
+
+typedef struct GRAPH_M_ADJ {
+    int nbSummit;
+    int nbArc;
+    float** matrix; /* matrice d'adjacence */
+    char* nodeStatus;
+    REALATED_COMPONENTS componentInfo;
+} GRAPH_M_ADJ;
+
+typedef struct GRAPH_L_ADJ /* listes d'adjacence */ {
+    int nbSom;
+    int nbArc;
+    int* predNumber;
+    CELL** succTab;
+    CELL** predTab;
+    TASK** nodeTab;
+} GRAPH_L_ADJ;
 
 //L_ADJ.c
 void        affiche_graphe(GRAPH_L_ADJ);

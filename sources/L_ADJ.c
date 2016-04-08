@@ -32,7 +32,8 @@ GRAPH_L_ADJ init_ladj(int nsom, int nar) /* allocation dynamique et initialisati
 
     graph.nbSom = nsom;
     graph.nbArc = nar;
-    graph.tab = (CELL**) calloc(nsom, sizeof (CELL*));
+    graph.succTab = (CELL**) calloc(nsom, sizeof (CELL*));
+    graph.predTab = (CELL**) calloc(nsom, sizeof (CELL*));
     
     //Initialisation du tableau du nombre de predecesseurs.
     graph.predNumber = (int*) malloc(graph.nbSom * sizeof (int));
@@ -46,14 +47,14 @@ GRAPH_L_ADJ init_ladj(int nsom, int nar) /* allocation dynamique et initialisati
     
     for (int i = 0; i < graph.nbSom; i++) {
         nodeTemp = (TASK*) malloc (sizeof(TASK));
-        nodeTemp->name = i;
+        nodeTemp->id = i;
         nodeTemp->earlyDate = 0;
         nodeTemp->lateDate = 0;
         
         graph.nodeTab[i] = nodeTemp;
     }
 
-    if (graph.tab == NULL) {
+    if (graph.succTab == NULL || graph.predTab == NULL) {
         exit(-1);
     }
 
@@ -64,9 +65,9 @@ void affiche_graphe(GRAPH_L_ADJ graph) {
     int i;
 
     for (i = 0; i < graph.nbSom; i++) {
-        if (graph.tab[i]) {
+        if (graph.succTab[i]) {
             printf("Successeurs de %d : ", i);
-            affiche_liste(graph.tab[i]);
+            affiche_liste(graph.succTab[i]);
         }
     }
     printf("\n");
@@ -90,8 +91,8 @@ GRAPH_L_ADJ charge_graphe(char* nom_fichier) {
     
     for (i = 0; i < nar; i++) {
         fscanf(fp, "%d %d %d", &ori, &ext, &val);
-        p = creer_cellule(ext, val, graph.tab[ori]);
-        graph.tab[ori] = p; /* on empile */
+        p = creer_cellule(ext, val, graph.succTab[ori]);
+        graph.succTab[ori] = p; /* on empile */
     }
     
     fclose(fp);
@@ -107,11 +108,11 @@ GRAPH_L_ADJ inverse(GRAPH_L_ADJ graph) {
     graph_inverse = init_ladj(graph.nbSom, graph.nbArc);
     
     for (i = 0; i < graph.nbSom; i++) {
-        p = graph.tab[i];
+        p = graph.succTab[i];
         
         while (p) {
-            q = creer_cellule(i, p->value, graph_inverse.tab[p->extremity]);
-            graph_inverse.tab[p->extremity] = q; /* on empile */
+            q = creer_cellule(i, p->value, graph_inverse.succTab[p->extremity]);
+            graph_inverse.succTab[p->extremity] = q; /* on empile */
             p = p->next;
         }
     }
