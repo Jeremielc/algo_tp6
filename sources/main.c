@@ -27,7 +27,7 @@ int main(int argc, char** argv) {
     computeTolerances(&graph); //marge de toutes les taches
     computeCritacalTasks(&graph, topologicalQueue); //liste des taches critiques
     //date de fin de travaux
-    printf("Date de fin des travaux : %d", graph.nodeTab[graph.nbSom - 1]->lateDate); //Date au plus tard de omega.
+    printf("Date de fin des travaux : %d\n", graph.nodeTab[graph.nbSom - 1]->lateDate); //Date au plus tard de omega.
 
     free(graph.predNumber);
     free(graph.nodeTab);
@@ -168,6 +168,7 @@ void computeCritacalTasks(GRAPH_L_ADJ* graph, QUEUE_INT topologicalQueue) {
 
         criticalTasks = get_int(criticalTasks);
     }
+    printf("\n");
 }
 
 void computeEarlyDate(GRAPH_L_ADJ* graph) {
@@ -200,15 +201,15 @@ void computeEarlyDate(GRAPH_L_ADJ* graph) {
 }
 
 void computeLateDate(GRAPH_L_ADJ* graph) {
-    for (int i = graph->nbSom - 1; i > 1; i--) {
+    for (int i = graph->nbSom - 2; i > 0; i--) {
         int temp;
-        CELL* cell = graph->predTab[i];
+        CELL* cell = graph->succTab[i];
 
         while (cell != NULL) {
             temp = graph->nodeTab[cell->extremity]->lateDate - graph->nodeTab[i]->duration;
 
             if (temp < graph->nodeTab[i]->lateDate) {
-                graph->nodeTab[cell->extremity]->lateDate = temp;
+                graph->nodeTab[i]->lateDate = temp;
             }
 
             cell = cell->next;

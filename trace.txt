@@ -19,18 +19,30 @@ Date au plus tot de 6 : 6
 Date au plus tot de 7 : 9
 Date au plus tot de 8 : 10
 
+Date au plus tard de 0 : 0
+Date au plus tard de 1 : 0
+Date au plus tard de 2 : 1
+Date au plus tard de 3 : 3
+Date au plus tard de 4 : 4
+Date au plus tard de 5 : 5
+Date au plus tard de 6 : 6
+Date au plus tard de 7 : 9
+Date au plus tard de 8 : 10
+
 Marge d'erreur de la tache 0 : 0
 Marge d'erreur de la tache 1 : 0
-Marge d'erreur de la tache 2 : 0
-Marge d'erreur de la tache 3 : 0
-Marge d'erreur de la tache 4 : -3
-Marge d'erreur de la tache 5 : -3
-Marge d'erreur de la tache 6 : -6
-Marge d'erreur de la tache 7 : -9
+Marge d'erreur de la tache 2 : 1
+Marge d'erreur de la tache 3 : 3
+Marge d'erreur de la tache 4 : 1
+Marge d'erreur de la tache 5 : 2
+Marge d'erreur de la tache 6 : 0
+Marge d'erreur de la tache 7 : 0
 Marge d'erreur de la tache 8 : 0
 
 Tache critique : 0
-Tache critique : 3
-Tache critique : 2
 Tache critique : 1
+Tache critique : 6
+Tache critique : 7
 Tache critique : 8
+
+Date de fin des travaux : 10
