@@ -13,7 +13,7 @@ int main(int argc, char** argv) {
 
     graph = load_graph(argv[1]);
 
-    //Marquage topologique//////////////////////////////////////////////////////
+    //Marquage topologique
     printf("Nombre de predecesseur de chacun des noeuds du graphe : \n");
     for (int i = 0; i < graph.nbSom; i++) {
         printf("Noeud %d : %d\n", i, graph.predNumber[i]);
@@ -21,61 +21,18 @@ int main(int argc, char** argv) {
     printf("\n");
 
     QUEUE_INT topologicalQueue = topologicalMarking(&graph);
-    ////////////////////////////////////////////////////////////////////////////
 
-    //fournir date au plus tot//////////////////////////////////////////////////
-    for (int i = 1; i < graph.nbSom; i++) {
-        int temp;
-        CELL* cell = graph.predTab[i];
-        
-        while (cell != NULL) {
-            temp = graph.nodeTab[cell->extremity]->duration + graph.nodeTab[cell->extremity]->earlyDate;
-
-            if (temp > graph.nodeTab[i]->earlyDate) {
-                graph.nodeTab[i]->earlyDate = temp;
-            } 
-            
-            cell = cell->next;
-        }
-    }
-
-    for (int i = 0; i < graph.nbSom; i++) {
-        printf("Date au plus tot de %d : %d\n", i, graph.nodeTab[i]->earlyDate);
-    }
-    printf("\n");
-    ////////////////////////////////////////////////////////////////////////////
-
-    //date au plus tard/////////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-
-    //marge de toutes les taches////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
-
-    //liste des taches critiques////////////////////////////////////////////////
-    QUEUE_INT criticalTemp = topologicalQueue;
-    QUEUE_INT criticalTasks = newEmptyQueue_int();
-
-    for (int i = 0; i < topologicalQueue.size; i++) {
-        TASK* node = graph.nodeTab[getHeadValue_int(criticalTemp)];
-        criticalTasks = checkAndAddCriticalTask(node, criticalTasks);
-
-        criticalTemp = get_int(criticalTemp);
-    }
-
-    int size = criticalTasks.size;
-    for (int i = 0; i < size; i++) {
-        int taskName = getHeadValue_int(criticalTasks);
-        printf("%s : %d\n", "Tache critique", taskName);
-
-        criticalTasks = get_int(criticalTasks);
-    }
-    ////////////////////////////////////////////////////////////////////////////
-
-    //date de fin de travaux////////////////////////////////////////////////////
-    ////////////////////////////////////////////////////////////////////////////
+    computeEarlyDate(&graph); //fournir date au plus tot
+    computeLateDate(&graph); //date au plus tard
+    computeTolerances(&graph); //marge de toutes les taches
+    computeCritacalTasks(&graph, topologicalQueue); //liste des taches critiques
+    //date de fin de travaux
+    printf("Date de fin des travaux : %d", graph.nodeTab[graph.nbSom - 1]->lateDate); //Date au plus tard de omega.
 
     free(graph.predNumber);
     free(graph.nodeTab);
+    free(graph.predTab);
+    free(graph.succTab);
 
     return 0;
 }
@@ -172,7 +129,7 @@ GRAPH_L_ADJ load_graph(char* fileName) {
             free(alias);
         }
 
-        alias = (char*) malloc(30 * sizeof (char));
+        alias = (char*) calloc(30, sizeof (char));
         fscanf(canal, "%d %d %s", &id, &duration, alias);
 
         graph.nodeTab[i]->id = id;
@@ -191,4 +148,86 @@ QUEUE_INT checkAndAddCriticalTask(TASK* node, QUEUE_INT criticalTasks) {
     }
 
     return criticalTasks;
+}
+
+void computeCritacalTasks(GRAPH_L_ADJ* graph, QUEUE_INT topologicalQueue) {
+    QUEUE_INT criticalTemp = topologicalQueue;
+    QUEUE_INT criticalTasks = newEmptyQueue_int();
+
+    for (int i = 0; i < topologicalQueue.size; i++) {
+        TASK* node = graph->nodeTab[getHeadValue_int(criticalTemp)];
+        criticalTasks = checkAndAddCriticalTask(node, criticalTasks);
+
+        criticalTemp = get_int(criticalTemp);
+    }
+
+    int size = criticalTasks.size;
+    for (int i = 0; i < size; i++) {
+        int taskName = getHeadValue_int(criticalTasks);
+        printf("%s : %d\n", "Tache critique", taskName);
+
+        criticalTasks = get_int(criticalTasks);
+    }
+}
+
+void computeEarlyDate(GRAPH_L_ADJ* graph) {
+    for (int i = 1; i < graph->nbSom; i++) {
+        int temp;
+        CELL* cell = graph->predTab[i];
+
+        while (cell != NULL) {
+            temp = graph->nodeTab[cell->extremity]->duration + graph->nodeTab[cell->extremity]->earlyDate;
+
+            if (temp > graph->nodeTab[i]->earlyDate) {
+                graph->nodeTab[i]->earlyDate = temp;
+            }
+
+            cell = cell->next;
+        }
+    }
+
+    graph->nodeTab[graph->nbSom - 1]->lateDate = graph->nodeTab[graph->nbSom - 1]->earlyDate; //Date au plus tard de omega = date au plus tot.
+    int temp = graph->nodeTab[graph->nbSom - 1]->lateDate;
+
+    for (int i = 1; i < graph->nbSom; i++) {
+        graph->nodeTab[i]->lateDate = temp;
+    }
+
+    for (int i = 0; i < graph->nbSom; i++) {
+        printf("Date au plus tot de %d : %d\n", i, graph->nodeTab[i]->earlyDate);
+    }
+    printf("\n");
+}
+
+void computeLateDate(GRAPH_L_ADJ* graph) {
+    for (int i = graph->nbSom - 1; i > 1; i--) {
+        int temp;
+        CELL* cell = graph->predTab[i];
+
+        while (cell != NULL) {
+            temp = graph->nodeTab[cell->extremity]->lateDate - graph->nodeTab[i]->duration;
+
+            if (temp < graph->nodeTab[i]->lateDate) {
+                graph->nodeTab[cell->extremity]->lateDate = temp;
+            }
+
+            cell = cell->next;
+        }
+    }
+
+    for (int i = 0; i < graph->nbSom; i++) {
+        printf("Date au plus tard de %d : %d\n", i, graph->nodeTab[i]->lateDate);
+    }
+    printf("\n");
+}
+
+void computeTolerances(GRAPH_L_ADJ* graph) {
+    for (int i = 0; i < graph->nbSom; i++) {
+        graph->nodeTab[i]->tolerance = graph->nodeTab[i]->lateDate - graph->nodeTab[i]->earlyDate;
+    }
+
+    for (int i = 0; i < graph->nbSom; i++) {
+        printf("Marge d'erreur de la tache %d : %d\n", i, graph->nodeTab[i]->tolerance);
+    }
+    printf("\n");
 }

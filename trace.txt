@@ -1,0 +1,36 @@
+Nombre de predecesseur de chacun des noeuds du graphe : 
+Noeud 0 : 0
+Noeud 1 : 1
+Noeud 2 : 1
+Noeud 3 : 1
+Noeud 4 : 1
+Noeud 5 : 1
+Noeud 6 : 2
+Noeud 7 : 3
+Noeud 8 : 1
+
+Date au plus tot de 0 : 0
+Date au plus tot de 1 : 0
+Date au plus tot de 2 : 0
+Date au plus tot de 3 : 0
+Date au plus tot de 4 : 3
+Date au plus tot de 5 : 3
+Date au plus tot de 6 : 6
+Date au plus tot de 7 : 9
+Date au plus tot de 8 : 10
+
+Marge d'erreur de la tache 0 : 0
+Marge d'erreur de la tache 1 : 0
+Marge d'erreur de la tache 2 : 0
+Marge d'erreur de la tache 3 : 0
+Marge d'erreur de la tache 4 : -3
+Marge d'erreur de la tache 5 : -3
+Marge d'erreur de la tache 6 : -6
+Marge d'erreur de la tache 7 : -9
+Marge d'erreur de la tache 8 : 0
+
+Tache critique : 0
+Tache critique : 3
+Tache critique : 2
+Tache critique : 1
+Tache critique : 8

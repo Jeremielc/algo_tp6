@@ -28,11 +28,12 @@ typedef struct CELL_INT {
 } CELL_INT;
 
 typedef struct TASK {
-    char* name;    //Nom de la tache
+    char* name;     //Nom de la tache
     int id;         //Numero du noeud
     int duration;   //Durée de la tache    
     int earlyDate;  //Date au plus tot
     int lateDate;   //Date au plus tard
+    int tolerance;  //Marge
 }TASK;
 
 typedef struct QUEUE {
@@ -84,6 +85,10 @@ GRAPH_L_ADJ init_ladj(int, int);
 GRAPH_L_ADJ inverse(GRAPH_L_ADJ);
 
 //main.c
+void        computeCritacalTasks(GRAPH_L_ADJ*, QUEUE_INT);
+void        computeEarlyDate(GRAPH_L_ADJ*);
+void        computeLateDate(GRAPH_L_ADJ*);
+void        computeTolerances(GRAPH_L_ADJ*);
 QUEUE_INT   topologicalMarking(GRAPH_L_ADJ*);
 GRAPH_L_ADJ load_graph(char*);
 QUEUE_INT   checkAndAddCriticalTask(TASK*, QUEUE_INT);
