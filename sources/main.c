@@ -14,6 +14,7 @@ int main(int argc, char** argv) {
     graph = load_graph(argv[1]);
 
     //Marquage topologique//////////////////////////////////////////////////////
+    printf("Nombre de predecesseur de chacun des noeuds du graphe : \n");
     for (int i = 0; i < graph.nbSom; i++) {
         printf("Noeud %d : %d\n", i, graph.predNumber[i]);
     }
@@ -24,10 +25,24 @@ int main(int argc, char** argv) {
 
     //fournir date au plus tot//////////////////////////////////////////////////
     for (int i = 1; i < graph.nbSom; i++) {
+        int temp;
+        CELL* cell = graph.predTab[i];
         
-        int temp = graph.nodeTab[i]->earlyDate;
-        temp += graph.nodeTab[graph.predTab[i]->extremity]->duration;
+        while (cell != NULL) {
+            temp = graph.nodeTab[cell->extremity]->duration + graph.nodeTab[cell->extremity]->earlyDate;
+
+            if (temp > graph.nodeTab[i]->earlyDate) {
+                graph.nodeTab[i]->earlyDate = temp;
+            } 
+            
+            cell = cell->next;
+        }
     }
+
+    for (int i = 0; i < graph.nbSom; i++) {
+        printf("Date au plus tot de %d : %d\n", i, graph.nodeTab[i]->earlyDate);
+    }
+    printf("\n");
     ////////////////////////////////////////////////////////////////////////////
 
     //date au plus tard/////////////////////////////////////////////////////////
@@ -50,7 +65,7 @@ int main(int argc, char** argv) {
     int size = criticalTasks.size;
     for (int i = 0; i < size; i++) {
         int taskName = getHeadValue_int(criticalTasks);
-        printf("%s %d : %d\n", "Critical task number", i, taskName);
+        printf("%s : %d\n", "Tache critique", taskName);
 
         criticalTasks = get_int(criticalTasks);
     }
@@ -137,7 +152,7 @@ GRAPH_L_ADJ load_graph(char* fileName) {
 
     for (int i = 0; i < nbar; i++) {
         fscanf(canal, "%d %d", &ori, &ext);
-        
+
         //Initialisation du tableau de successeurs
         cell = creer_cellule(ext, 0, graph.succTab[ori]);
         graph.succTab[ori] = cell; //on empile dans le tableau des successeurs
@@ -148,23 +163,23 @@ GRAPH_L_ADJ load_graph(char* fileName) {
 
         graph.predNumber[ext] += 1; //Pour le marquage topologique.
     }
-    
+
     char* alias = NULL;
     int id, duration;
-    
+
     for (int i = 0; i < graph.nbSom; i++) {
         if (alias != NULL) {
             free(alias);
         }
-        
+
         alias = (char*) malloc(30 * sizeof (char));
         fscanf(canal, "%d %d %s", &id, &duration, alias);
-        
+
         graph.nodeTab[i]->id = id;
         graph.nodeTab[i]->duration = duration;
         graph.nodeTab[i]->name = alias;
     }
-    
+
     fclose(canal);
 
     return graph;
